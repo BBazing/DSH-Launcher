@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DSH Launcher</title>
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="controls.css">
+<link rel="stylesheet" href="pcl.css">
+<link rel="stylesheet" href="dialogs.css">
+</head>
+<body>
+<header class="pcl-titlebar" id="windowDrag">
+  <div class="pcl-brand" id="appBrand">DSH</div>
+  <button class="pcl-back-title" id="windowBack" hidden><svg viewBox="0 0 24 24"><path d="m13 4-8 8 8 8M5 12h17"/></svg><span id="windowBackTitle">版本选择</span></button>
+  <nav class="pcl-tabs" id="mainTabs" aria-label="主导航">
+    <button class="pcl-tab active" data-group="home"><svg viewBox="0 0 24 24"><path d="m5 3 16 9-16 9z"/></svg><span>启动</span></button>
+    <button class="pcl-tab" data-group="download"><svg viewBox="0 0 24 24"><path d="M12 2v13m-5-5 5 5 5-5M4 15v5h16v-5"/></svg><span>下载</span></button>
+    <button class="pcl-tab" data-group="settings"><svg viewBox="0 0 24 24"><path d="m6 3-5 9 5 9h12l5-9-5-9z"/><circle cx="12" cy="12" r="4"/></svg><span>设置</span></button>
+    <button class="pcl-tab" data-group="more"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="6" height="6"/><rect x="15" y="3" width="6" height="6"/><rect x="3" y="15" width="6" height="6"/><rect x="15" y="15" width="6" height="6"/></svg><span>更多</span></button>
+  </nav>
+  <div class="pcl-window-controls">
+    <button class="window-control" id="windowMinimize" aria-label="最小化"><svg viewBox="0 0 24 24"><path d="M4 12h16"/></svg></button>
+    <button class="window-control close" id="windowClose" aria-label="关闭"><svg viewBox="0 0 24 24"><path d="m4 4 16 16M20 4 4 20"/></svg></button>
+  </div>
+</header>
+<div class="pcl-workspace" id="workspace" data-home="true">
+  <div class="pcl-background" aria-hidden="true"></div>
+  <aside class="pcl-home-left" id="homeLeft">
+    <button class="pcl-account-type" id="accountEdit"><svg viewBox="0 0 24 20"><rect x="1.5" y="2.5" width="21" height="15" rx=".5"/><path d="M4.5 6h4M4.5 9h3M4.5 12h3M12 14c0-4 6-4 6 0"/><circle cx="15" cy="7.5" r="2.5"/></svg><span id="accountTypeLabel">DeepSeek 登录</span></button>
+    <button class="pcl-account" id="accountCard" aria-label="登录 DeepSeek">
+      <img class="pcl-avatar" id="accountAvatar" src="assets/account-guest.svg" alt="账号头像" width="70" height="70" referrerpolicy="no-referrer">
+      <div class="pcl-account-name" id="accountName">读取账号…</div>
+      <div class="pcl-account-subtitle" id="accountSubtitle">点击登录 DeepSeek</div>
+    </button>
+    <div class="pcl-launch-area">
+      <button class="pcl-launch" id="launchButton"><span id="launchLabel">启动 DSH</span><small id="launchDetail">desktop</small></button>
+      <div class="pcl-launch-row"><button class="pcl-button" id="selectVersion">版本选择</button><button class="pcl-button" id="versionSettings">版本设置</button></div>
+    </div>
+  </aside>
+  <aside class="pcl-page-left" id="pageLeft" hidden><nav id="sectionNav" aria-label="页面导航"></nav></aside>
+  <main class="pcl-page-main" id="pageMain">
+    <header class="pcl-page-toolbar" id="pageToolbar" hidden>
+      <div><h1 id="pageTitle"></h1><span id="pageSub"></span></div>
+      <div class="pcl-page-actions"><div class="pill" id="statusPill"><i class="dot"></i><span>连接中…</span></div><button class="btn ghost sm" id="refreshBtn">刷新</button></div>
+    </header>
+    <div class="pcl-content" id="content"></div>
+  </main>
+</div>
+<div class="modal-backdrop" id="modal" hidden><div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><h3 id="modalTitle">提示</h3><div class="modal-divider"></div><div id="modalBody" class="modal-body"></div><div class="modal-foot"><div id="modalActions" class="modal-actions"></div><button class="btn ghost" id="modalClose">确定</button></div></div></div>
+<div class="toasts" id="toasts"></div>
+<script src="pcl-pages.js"></script>
+<script src="pcl-plugins.js"></script>
+<script src="pcl-market.js"></script>
+<script src="pcl-account.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
