@@ -1,0 +1,16 @@
+{
+  "name": "dsh-launcher",
+  "version": "0.3.0",
+  "private": true,
+  "type": "module",
+  "description": "PCL2 风格的 DeepSeek Harness 启动器：版本 / 实例 / 插件管理",
+  "main": "server/server.mjs",
+  "scripts": {
+    "start": "node server/server.mjs",
+    "dev": "node server/server.mjs",
+    "test": "node ../tests/test-release.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
