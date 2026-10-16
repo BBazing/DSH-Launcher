@@ -1,54 +1,49 @@
 # DSH Launcher
 
-仿照 Minecraft 的 PCL2 启动器制作的 DSH 启动器。支持桌面版与网页版启动、插件下载与管理，以及沿用 DSH 本体的 DeepSeek 登录。
+仿照 Minecraft 的 PCL2 启动器制作的 DSH 启动器，用熟悉的界面启动 DeepSeek Harness（DSH）、切换实例和管理插件。
 
-这是独立第三方项目，与 DeepSeek、PCL 官方无隶属关系。PCL 界面及图标参考署名龙腾猫跃，第三方许可见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。
+**[下载 Windows 版](https://github.com/BBazing/DSH-Launcher/releases/latest) · [DeepSeek 官网](https://www.deepseek.com/) · [官方下载 DSH](https://www.deepseek.com/download/)**
 
-## 给使用者
+## 可以做什么
 
-在 GitHub Releases 下载 `DSHLauncher-v0.3.0-win-x64.exe`，单独发送这一个文件即可，不需要一起发送源码目录。支持 Windows 10/11 x64，使用系统的 .NET Framework 4.7.2 或以上版本。
+- 启动 DSH 桌面版或网页版，集中管理不同实例。
+- 搜索、下载、安装插件，管理插件的启用、停用和卸载。
+- 沿用 DSH 本体的 DeepSeek 账号登录。
+- 使用参考 PCL2 的启动、下载、设置和插件管理界面。
 
-EXE 内置 Node.js 24.21.0、pnpm 11.7.0 和 WebView2 SDK。第一次打开会自动把程序文件释放到 `%LOCALAPPDATA%\DSHLauncher\apps\`；这不是不落盘运行的 EXE。配置、缓存、日志和下载的 Web 运行时分别存于 `%LOCALAPPDATA%\DSHLauncher\data\`，不会写到 EXE 所在目录。
+## 下载与使用
 
-1. 已安装官方 DSH：启动器会通过安装信息和常见目录查找；没找到时点击“选择 DSH 程序”，或在设置中“浏览”选择 `DeepSeek Harness.exe`。
-2. 未安装 DSH：点击“官方下载 DSH”，安装后选择程序。DSH 本体不包含在这个 EXE 中。
-3. 使用网页版：先到“下载”安装 DSH 运行时，再在“版本选择”中新建 Web 实例并安装依赖。插件与运行时下载需要联网。
-4. 账号与实例沿用自己的 `%USERPROFILE%\.dsh`。发行包中没有制作者的账号、插件、聊天记录或访问令牌。
+适用于 **Windows 10 / 11，64 位（x64）**。
 
-内置 pnpm 默认只允许官方运行时所需的 `@deepseek-ai/dsh-subprocess-local`、`koffi`、`node-pty` 构建脚本。其他依赖的安装脚本仍会被 pnpm 阻止并在日志中提示；需要额外原生构建的第三方插件应按其说明配置 `allowBuilds`，不保证所有插件都能直接使用。
+到[下载页](https://github.com/BBazing/DSH-Launcher/releases/latest)下载 **`DSHLauncher-v0.3.0-win-x64.exe`**，打开即可开始使用。日常使用只需要这一个 EXE，不必下载源码，也不用另外安装 Node.js 或 pnpm。
 
-启动器新建的 Web 实例使用 DSH 的 `patchReload: startup` 模式，修改插件开关或安装扩展后需要重启该实例。已有实例的设置保持不变。
+1. **启动桌面版**：已安装 DSH 时，启动器会尝试自动查找；没有找到就点击“选择 DSH 程序”，选择 `DeepSeek Harness.exe`。尚未安装时，可点击“官方下载 DSH”。
+2. **使用网页版**：先在“下载”中安装 DSH 运行时，再在“版本选择”中新建 Web 实例、安装依赖后启动。
+3. **登录账号**：沿用 DSH 本体的 DeepSeek 登录方式，使用自己的账号。
+4. **管理插件**：在下载页搜索并安装插件，在实例的插件管理页调整开关或卸载。修改后重启对应实例，使更改生效。
 
-原生窗口需要 WebView2 Runtime。缺少时会提供微软下载入口，并可临时在浏览器中使用。普通关闭只关窗口；需要更新 EXE 或完全退出时，在“更多 → 百宝箱 → 完全退出启动器”操作。运行中的实例或下载任务须先停止。
+DSH 本体不包含在启动器中。下载运行时、依赖和插件时需要联网；部分插件还需要额外配置，具体以插件说明为准。
 
-本版本未进行 Authenticode 代码签名；Windows 可能显示未知发布者。可将文件的 SHA-256 与同一 Release 的 `SHA256SUMS.txt` 比较。哈希用于核对下载完整性，不替代发布者签名。
+## 常见问题
 
-## 本地构建
+**第一次打开需要准备什么？**
 
-在 Windows x64 上，无需安装 Node 或 .NET SDK，构建使用系统 .NET Framework C# 编译器：
+启动器会自动释放所需文件到本机用户目录。原生窗口需要 WebView2 Runtime，缺少时按提示安装，也可以先在浏览器中使用。系统需具备 .NET Framework 4.7.2 或以上版本。
 
-```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File scripts/build.ps1 -FetchDependencies
-```
+**Windows 提示未知发布者或拦截启动？**
 
-依赖从 Node.js、npm、NuGet 官方端点按 `dependencies.lock.json` 固定版本下载和校验。产物在 `dist/`：EXE、SHA-256、负载文件清单和版本信息。构建源文件采用白名单，不读取制作者的用户目录、账号、配置和缓存。
+当前 EXE 尚未进行代码签名。请从本仓库的下载页获取文件；需要核对下载完整性时，可参考同页的 `SHA256SUMS.txt`。
 
-已准备好本机 vendor 和 DLL 时，可省略 `-FetchDependencies`。这些二进制依赖不提交 Git。
+**配置和账号保存在哪里？**
 
-```powershell
-.\vendor\node\node.exe tests/test-release.mjs
-.\vendor\node\node.exe tests/test-live.mjs
-& .\dist\DSHLauncher-v0.3.0-win-x64.exe --data-dir "$PWD\build\smoke-profile" --smoke-test --report "$PWD\build\smoke-report.json"
-```
+启动器数据保存在 `%LOCALAPPDATA%\DSHLauncher\`，DSH 账号与实例沿用自己的 `%USERPROFILE%\.dsh`。
 
-`--smoke-test` 使用独立临时 DSH 环境，验证内置 Node / pnpm、HTTP 后台和实际原生窗口后退出，不登录或启动真实 DSH。`--extract-only` 仅验证并释放负载。
+**如何完全退出或更换 EXE？**
 
-`tests/test-live.mjs` 在独立环境实际下载 DSH 0.1.5-rc.2 和 dsh-pet@0.3.7，再验证 Web 启动和插件卸载，需要网络。
+先停止运行中的实例和下载任务，再点击“更多 → 百宝箱 → 完全退出启动器”。普通关闭只关闭窗口；更新时请完全退出后再更换 EXE。
 
-## 发布到 GitHub
+## 鸣谢与说明
 
-推荐解压 `dist/DSHLauncher-v0.3.0-source.zip`，将解压后的内容上传到仓库。源码包已排除 vendor、DLL、build、dist 及测试数据。使用 Git 提交本目录时，`.gitignore` 也会排除这些文件；GitHub 网页拖放上传不会自动遵守 `.gitignore`，不要直接拖入整个开发目录。
+界面和图标参考 [Plain Craft Launcher 2（PCL2）](https://github.com/Meloong-Git/PCL)，感谢龙腾猫跃及相关贡献者。感谢 [DeepSeek](https://www.deepseek.com/) 提供 DSH。
 
-推送与 `app/package.json` 一致的版本标签，例如 `v0.3.0`，GitHub Actions 会构建并检查产物，然后创建 **草稿 Release**，附上单 EXE 和校验信息。检查草稿后再发布。手动运行工作流只上传构建产物，不创建 Release。
-
-本地上传现成产物时，选择 `dist/DSHLauncher-v0.3.0-win-x64.exe`，建议一起上传 `SHA256SUMS.txt`、`payload-manifest.json` 和 `release-info.json`；使用者只需下载 EXE。
+本项目是独立第三方启动器，与 DeepSeek、PCL 官方无隶属关系。第三方许可见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)，源码构建方法见 [BUILDING.md](BUILDING.md)。
