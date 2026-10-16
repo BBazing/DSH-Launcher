@@ -1,0 +1,57 @@
+name: Build Windows release
+on:
+  workflow_dispatch:
+  push:
+    tags: ['v*']
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate release tag
+        if: startsWith(github.ref, 'refs/tags/')
+        shell: pwsh
+        env:
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          $version = (Get-Content app/package.json -Raw | ConvertFrom-Json).version
+          if ($env:RELEASE_TAG -ne "v$version") { throw 'Tag and package version differ.' }
+      - name: Build single EXE
+        shell: powershell
+        run: ./scripts/build.ps1 -FetchDependencies
+      - name: Test isolated backend and payload extraction
+        shell: pwsh
+        run: |
+          & ./vendor/node/node.exe ./tests/test-windows-links.cjs
+          if ($LASTEXITCODE -ne 0) { throw 'Junction tests failed.' }
+          & ./vendor/node/node.exe ./tests/test-release.mjs
+          if ($LASTEXITCODE -ne 0) { throw 'Release tests failed.' }
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dsh-launcher-windows-x64
+          path: dist/*
+          if-no-files-found: error
+  draft-release:
+    if: startsWith(github.ref, 'refs/tags/')
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: dsh-launcher-windows-x64
+          path: dist
+      - name: Create draft Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          if gh release view "$RELEASE_TAG" >/dev/null 2>&1; then
+            echo "A release already exists for $RELEASE_TAG; preserving its assets."
+          else
+            gh release create "$RELEASE_TAG" dist/* --draft --verify-tag --title "DSH Launcher $RELEASE_TAG" --generate-notes
+          fi
