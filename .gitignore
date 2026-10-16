@@ -1,0 +1,14 @@
+/vendor/
+/build/
+/dist/
+/app/native/bin/
+**/.webview-profile/
+**/.window-profile/
+**/webview-profile/
+**/.dsh-home/
+**/logs/
+**/backups/
+**/launcher.config.json
+**/.credentials*
+**/*.log
+node_modules/
